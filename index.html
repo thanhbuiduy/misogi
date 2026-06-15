@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Misogi Challenge — Prototype</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0a0a0a;
+    color: #fff;
+    padding: 24px;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; background: #0a0a0a; border-radius: 12px; overflow: hidden; }
+  .nav { display: flex; border-bottom: 0.5px solid #333; flex-wrap: wrap; }
+  .nav-tab { padding: 14px 20px; cursor: pointer; font-size: 14px; color: #999; }
+  .nav-tab.active { color: #fff; border-bottom: 2px solid #E24B4A; }
+  .content { padding: 24px; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+  h1 { font-size: 24px; font-weight: 500; margin: 0; }
+  h2 { font-size: 16px; font-weight: 500; margin-bottom: 12px; }
+  p { line-height: 1.6; }
+  .muted { color: #999; font-size: 13px; }
+  .badge { display: inline-block; background: #E24B4A; color: #fff; font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .card { background: #1a1a1a; border-radius: 12px; padding: 1rem; border: 0.5px solid #333; }
+  .card-lg { background: #1a1a1a; border-radius: 12px; padding: 1.25rem; border: 0.5px solid #333; }
+  .stat-label { font-size: 13px; color: #999; margin-bottom: 6px; }
+  .stat-value { font-size: 24px; font-weight: 500; }
+  .checkbox-card { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .checkbox-card input { width: 18px; height: 18px; }
+  .checkbox-card i { font-size: 18px; }
+  .checkbox-card p { font-size: 14px; margin: 4px 0 0; }
+  .month-block p.month-title { font-size: 13px; font-weight: 500; color: #E24B4A; margin-bottom: 8px; }
+  .day-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .day-cell { aspect-ratio: 1; border: 0.5px solid #333; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px; }
+  .day-done { background: #E24B4A; color: #fff; }
+  .day-todo { background: #1a1a1a; color: #666; }
+  .tag-row { display: flex; gap: 8px; font-size: 12px; }
+  .tag { background: #1a1a1a; padding: 6px 10px; border-radius: 6px; border: 0.5px solid #333; }
+  .lib-card-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #999; }
+  button {
+    background: transparent; border: 0.5px solid #444; color: #fff;
+    padding: 6px 12px; border-radius: 6px; font-size: 13px; cursor: pointer;
+  }
+  button:hover { background: #2a2a2a; }
+  .btn-primary { background: #E24B4A; border: none; color: #fff; padding: 10px 20px; font-weight: 500; }
+  .btn-primary:hover { background: #c93c3b; }
+  input[type="text"], input[type="date"], select, textarea {
+    width: 100%; background: #1a1a1a; border: 0.5px solid #333; border-radius: 6px;
+    color: #fff; padding: 8px; font-size: 14px; font-family: inherit;
+  }
+  label.field-label { font-size: 12px; color: #999; display: block; margin-bottom: 6px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 600px; }
+  .span-2 { grid-column: span 2; }
+  .feed-item { background: #1a1a1a; border-radius: 12px; padding: 12px; border: 0.5px solid #333; display: flex; gap: 10px; margin-bottom: 10px; }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; flex-shrink: 0; color: #fff; }
+  .leaderboard-row { display: flex; justify-content: space-between; padding: 8px; font-size: 13px; border-top: 0.5px solid #333; }
+  .leaderboard-row:first-child { border-top: none; }
+  .you-row { background: #2a1515; border-radius: 6px; font-weight: 500; }
+  .create-card { border: 2px dashed #444; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #999; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="nav">
+    <div class="nav-tab active" data-screen="dashboard">Dashboard</div>
+    <div class="nav-tab" data-screen="tracker">My calendar</div>
+    <div class="nav-tab" data-screen="library">Challenge library</div>
+    <div class="nav-tab" data-screen="create">Create challenge</div>
+    <div class="nav-tab" data-screen="community">Community</div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="screen active" id="screen-dashboard">
+      <div class="badge">MISOGI METHOD</div>
+      <h1>Welcome back, Thanh</h1>
+      <p class="muted" style="margin-bottom:20px;">Day 26 of your 365-day challenge</p>
+
+      <div class="grid-4" style="margin-bottom:24px;">
+        <div class="card"><div class="stat-label">Days done</div><div class="stat-value">26</div></div>
+        <div class="card"><div class="stat-label">Days left</div><div class="stat-value" style="color:#E24B4A;">339</div></div>
+        <div class="card"><div class="stat-label">Best streak</div><div class="stat-value">11</div></div>
+        <div class="card"><div class="stat-label">Complete</div><div class="stat-value">7%</div></div>
+      </div>
+
+      <h2>Today's check-in — June 15</h2>
+      <div class="grid-3" style="margin-bottom:24px;">
+        <label class="card checkbox-card">
+          <input type="checkbox" id="chk-main">
+          <div><i class="ti ti-target" style="color:#E24B4A;"></i><p>Project with Warren</p></div>
+        </label>
+        <label class="card checkbox-card">
+          <input type="checkbox" id="chk-exercise">
+          <div><i class="ti ti-run" style="color:#1D9E75;"></i><p>15 min exercise</p></div>
+        </label>
+        <label class="card checkbox-card">
+          <input type="checkbox" id="chk-meditation">
+          <div><i class="ti ti-yoga" style="color:#7F77DD;"></i><p>15 min meditation</p></div>
+        </label>
+      </div>
+
+      <h2>Support this week</h2>
+      <div class="grid-3">
+        <div class="card-lg">
+          <i class="ti ti-message-circle-2" style="font-size:20px;color:#378ADD;"></i>
+          <p style="font-weight:500;font-size:14px;margin:8px 0 2px;">Coaching session</p>
+          <p class="muted" style="margin:0;">Wed, June 17 — 3pm</p>
+        </div>
+        <div class="card-lg">
+          <i class="ti ti-school" style="font-size:20px;color:#BA7517;"></i>
+          <p style="font-weight:500;font-size:14px;margin:8px 0 2px;">Habit-building training</p>
+          <p class="muted" style="margin:0;">Recording available</p>
+        </div>
+        <div class="card-lg">
+          <i class="ti ti-users" style="font-size:20px;color:#1D9E75;"></i>
+          <p style="font-weight:500;font-size:14px;margin:8px 0 2px;">Mentor check-in</p>
+          <p class="muted" style="margin:0;">Book a slot</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRACKER -->
+    <div class="screen" id="screen-tracker">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px;">
+        <div>
+          <h1>Project with Warren</h1>
+          <p class="muted" style="margin-top:4px;">365 days. One challenge. Started Feb 6, 2026.</p>
+        </div>
+        <div class="tag-row">
+          <span class="tag"><i class="ti ti-target" style="color:#E24B4A;"></i> Main</span>
+          <span class="tag"><i class="ti ti-run" style="color:#1D9E75;"></i> Exercise</span>
+          <span class="tag"><i class="ti ti-yoga" style="color:#7F77DD;"></i> Meditation</span>
+        </div>
+      </div>
+      <div class="grid-4" id="calendar-grid"></div>
+    </div>
+
+    <!-- LIBRARY -->
+    <div class="screen" id="screen-library">
+      <h1>Challenge library</h1>
+      <p class="muted" style="margin-bottom:20px;">Join a community challenge or browse what others are doing</p>
+      <div class="grid-3">
+
+        <div class="card-lg">
+          <i class="ti ti-mountain" style="font-size:22px;color:#E24B4A;"></i>
+          <p style="font-weight:500;font-size:15px;margin:10px 0 4px;">Project with Warren</p>
+          <p class="muted" style="margin-bottom:12px;">365-day physical & mental endurance challenge</p>
+          <div class="lib-card-row">
+            <span><i class="ti ti-users"></i> 34 joined</span>
+            <span style="background:#2a2a2a;color:#aaa;padding:3px 8px;border-radius:6px;">Joined</span>
+          </div>
+        </div>
+
+        <div class="card-lg">
+          <i class="ti ti-book" style="font-size:22px;color:#378ADD;"></i>
+          <p style="font-weight:500;font-size:15px;margin:10px 0 4px;">Read 12 books</p>
+          <p class="muted" style="margin-bottom:12px;">One book a month, any genre, share your notes</p>
+          <div class="lib-card-row">
+            <span><i class="ti ti-users"></i> 58 joined</span>
+            <button>Join</button>
+          </div>
+        </div>
+
+        <div class="card-lg">
+          <i class="ti ti-language" style="font-size:22px;color:#639922;"></i>
+          <p style="font-weight:500;font-size:15px;margin:10px 0 4px;">Learn Spanish from zero</p>
+          <p class="muted" style="margin-bottom:12px;">Daily 20-min practice, conversational by year-end</p>
+          <div class="lib-card-row">
+            <span><i class="ti ti-users"></i> 22 joined</span>
+            <button>Join</button>
+          </div>
+        </div>
+
+        <div class="card-lg">
+          <i class="ti ti-rocket" style="font-size:22px;color:#D85A30;"></i>
+          <p style="font-weight:500;font-size:15px;margin:10px 0 4px;">Start a side business</p>
+          <p class="muted" style="margin-bottom:12px;">Idea to first paying customer in 12 months</p>
+          <div class="lib-card-row">
+            <span><i class="ti ti-users"></i> 41 joined</span>
+            <button>Join</button>
+          </div>
+        </div>
+
+        <div class="card-lg">
+          <i class="ti ti-pencil" style="font-size:22px;color:#D4537E;"></i>
+          <p style="font-weight:500;font-size:15px;margin:10px 0 4px;">Write every day</p>
+          <p class="muted" style="margin-bottom:12px;">Journaling or creative writing, 15 min minimum</p>
+          <div class="lib-card-row">
+            <span><i class="ti ti-users"></i> 19 joined</span>
+            <button>Join</button>
+          </div>
+        </div>
+
+        <div class="card-lg create-card">
+          <i class="ti ti-plus" style="font-size:22px;"></i>
+          <p style="font-weight:500;font-size:14px;margin:10px 0 0;">Create your own</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CREATE -->
+    <div class="screen" id="screen-create">
+      <h1>Create a challenge</h1>
+      <p class="muted" style="margin-bottom:20px;">Set up something tangible, physical, or skill-based — solo or open to others</p>
+
+      <div class="form-grid">
+        <div class="span-2">
+          <label class="field-label">Challenge name</label>
+          <input type="text" placeholder="e.g. Run a marathon">
+        </div>
+        <div class="span-2">
+          <label class="field-label">Description</label>
+          <textarea style="min-height:70px;" placeholder="What does completing this look like?"></textarea>
+        </div>
+        <div>
+          <label class="field-label">Category</label>
+          <select>
+            <option>Physical</option>
+            <option>Skill / learning</option>
+            <option>Creative / tangible</option>
+            <option>Business / career</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Duration</label>
+          <select>
+            <option>365 days</option>
+            <option>90 days</option>
+            <option>30 days</option>
+            <option>Custom</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Start date</label>
+          <input type="date">
+        </div>
+        <div>
+          <label class="field-label">Visibility</label>
+          <select>
+            <option>Personal only</option>
+            <option>Open to join</option>
+          </select>
+        </div>
+        <div class="span-2">
+          <label class="field-label">Daily habits to track alongside (optional)</label>
+          <div style="display:flex;gap:10px;">
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" checked style="width:auto;"> Exercise (15 min)</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" checked style="width:auto;"> Meditation (15 min)</label>
+          </div>
+        </div>
+        <div class="span-2">
+          <button class="btn-primary">Create challenge</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMMUNITY -->
+    <div class="screen" id="screen-community">
+      <h1>Project with Warren — community</h1>
+      <p class="muted" style="margin-bottom:20px;">34 participants · started Feb 6, 2026</p>
+
+      <div class="grid-2">
+        <div>
+          <h2>Activity feed</h2>
+          <div class="feed-item">
+            <div class="avatar" style="background:#534AB7;">WL</div>
+            <div><p style="font-size:13px;margin:0;"><strong>Warren L.</strong> hit day 26 — full streak this week</p><p class="muted" style="margin:4px 0 0;font-size:11px;">2 hours ago</p></div>
+          </div>
+          <div class="feed-item">
+            <div class="avatar" style="background:#0F6E56;">MN</div>
+            <div><p style="font-size:13px;margin:0;"><strong>Mai N.</strong> shared progress notes from week 4</p><p class="muted" style="margin:4px 0 0;font-size:11px;">5 hours ago</p></div>
+          </div>
+          <div class="feed-item">
+            <div class="avatar" style="background:#993C1D;">DT</div>
+            <div><p style="font-size:13px;margin:0;"><strong>Duc T.</strong> missed yesterday — back on track today</p><p class="muted" style="margin:4px 0 0;font-size:11px;">1 day ago</p></div>
+          </div>
+        </div>
+
+        <div>
+          <h2>Leaderboard — best streak</h2>
+          <div class="card-lg" style="padding:8px;">
+            <div class="leaderboard-row"><span>1. Linh P.</span><span style="color:#FAC775;">19 days</span></div>
+            <div class="leaderboard-row"><span>2. Warren L.</span><span class="muted">14 days</span></div>
+            <div class="leaderboard-row you-row"><span>3. Thanh (you)</span><span class="muted">11 days</span></div>
+            <div class="leaderboard-row"><span>4. Mai N.</span><span class="muted">9 days</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Tab navigation
+  document.querySelectorAll('.nav-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('screen-' + tab.dataset.screen).classList.add('active');
+    });
+  });
+
+  // Build calendar
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const daysInMonth = [31,28,31,30,31,30,31,31,30,31,30,31];
+  const checkedDays = 26;
+  let gridHtml = '';
+  let dayCount = 0;
+  for (let m = 0; m < 12; m++) {
+    gridHtml += '<div class="month-block"><p class="month-title">' + months[m] + '</p><div class="day-grid">';
+    for (let d = 0; d < daysInMonth[m]; d++) {
+      dayCount++;
+      const done = dayCount <= checkedDays;
+      gridHtml += '<div class="day-cell ' + (done ? 'day-done' : 'day-todo') + '">' +
+        (done ? '<i class="ti ti-check" style="font-size:10px;"></i>' : (d + 1)) +
+        '</div>';
+    }
+    gridHtml += '</div></div>';
+  }
+  document.getElementById('calendar-grid').innerHTML = gridHtml;
+</script>
+
+</body>
+</html>
