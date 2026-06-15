@@ -64,13 +64,49 @@
   .leaderboard-row:first-child { border-top: none; }
   .you-row { background: #2a1515; border-radius: 6px; font-weight: 500; }
   .create-card { border: 2px dashed #444; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #999; }
+
+  /* Worksheet styles */
+  .ws-header { text-align: center; margin-bottom: 24px; }
+  .ws-header h1 { font-size: 28px; letter-spacing: 1px; }
+  .ws-header p { color: #999; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
+  .ws-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .ws-card { background: #1a1a1a; border-radius: 12px; padding: 1.25rem; border: 0.5px solid #333; margin-bottom: 16px; }
+  .ws-card h2 { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+  .ws-card h2 i { color: #E24B4A; font-size: 18px; }
+  .ws-full { grid-column: span 2; }
+  .ws-card textarea { min-height: 60px; margin-top: 6px; }
+  .ws-card input[type="text"] { margin-top: 6px; }
+  .scale-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 12px; }
+  .scale-row .scale-label { width: 130px; color: #999; flex-shrink: 0; }
+  .scale-dots { display: flex; gap: 4px; flex: 1; }
+  .scale-dot { width: 18px; height: 18px; border-radius: 50%; border: 0.5px solid #555; cursor: pointer; flex-shrink: 0; background: transparent; }
+  .scale-dot.selected { background: #E24B4A; border-color: #E24B4A; }
+  .scale-num { font-size: 9px; color: #666; text-align: center; width: 18px; flex-shrink: 0; }
+  .ws-note { background: #1a1512; border: 0.5px solid #4a3020; border-radius: 8px; padding: 10px; font-size: 12px; color: #d9a679; text-align: center; margin-top: 8px; }
+  .check-row { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; margin: 8px 0; }
+  .check-row label { display: flex; align-items: center; gap: 6px; }
+  .check-row input { width: auto; }
+  .milestone-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .milestone-row span { font-size: 13px; color: #999; width: 70px; flex-shrink: 0; }
+  .yesno-row { display: flex; align-items: center; gap: 16px; font-size: 13px; }
+  .yesno-row label { display: flex; align-items: center; gap: 6px; }
+  .yesno-row input { width: auto; }
+  .ws-footer { text-align: center; margin-top: 24px; padding-top: 16px; border-top: 0.5px solid #333; }
+  .ws-footer-tags { display: flex; justify-content: center; gap: 32px; margin-top: 12px; font-size: 11px; color: #999; flex-wrap: wrap; }
+  .ws-footer-tags div { text-align: center; }
+  .ws-footer-tags i { display: block; font-size: 18px; color: #E24B4A; margin-bottom: 4px; }
+  @media (max-width: 700px) {
+    .ws-grid, .grid-4, .grid-3, .grid-2, .form-grid { grid-template-columns: 1fr; }
+    .ws-full, .span-2 { grid-column: span 1; }
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <div class="nav">
-    <div class="nav-tab active" data-screen="dashboard">Dashboard</div>
+    <div class="nav-tab active" data-screen="worksheet">My Misogi</div>
+    <div class="nav-tab" data-screen="dashboard">Dashboard</div>
     <div class="nav-tab" data-screen="tracker">My calendar</div>
     <div class="nav-tab" data-screen="library">Challenge library</div>
     <div class="nav-tab" data-screen="create">Create challenge</div>
@@ -79,8 +115,145 @@
 
   <div class="content">
 
-    <!-- DASHBOARD -->
-    <div class="screen active" id="screen-dashboard">
+    <!-- WORKSHEET (HOMEPAGE) -->
+    <div class="screen active" id="screen-worksheet">
+      <div class="ws-header">
+        <h1>MISOGI YEAR TEMPLATE</h1>
+        <p>One year. One challenge. Total transformation.</p>
+      </div>
+
+      <div class="ws-grid">
+        <div class="ws-card">
+          <h2><i class="ti ti-target"></i> 1. My one defining challenge</h2>
+          <p class="muted" style="margin-top:6px;">If I accomplish only ONE thing this year, what would make this year unforgettable?</p>
+          <label class="field-label" style="margin-top:10px;">My Misogi</label>
+          <input type="text" placeholder="e.g. Complete Project with Warren">
+          <label class="field-label" style="margin-top:10px;">Why it matters</label>
+          <textarea placeholder="What's the deeper reason this matters to you?"></textarea>
+        </div>
+
+        <div class="ws-card">
+          <h2><i class="ti ti-scale"></i> 2. The 50/50 test</h2>
+          <p class="muted" style="margin-top:6px;">A true Misogi should have roughly a 50% chance of success.</p>
+          <div class="scale-row" style="margin-top:12px;">
+            <span class="scale-label">Excitement level</span>
+            <div class="scale-dots" data-group="excitement"></div>
+          </div>
+          <div class="scale-row">
+            <span class="scale-label">Fear level</span>
+            <div class="scale-dots" data-group="fear"></div>
+          </div>
+          <div class="scale-row">
+            <span class="scale-label">Chance of failure</span>
+            <div class="scale-dots" data-group="failure"></div>
+          </div>
+          <div class="ws-note">If Fear &lt; 7 → Too small.<br>If Success feels guaranteed → Too small.</div>
+        </div>
+
+        <div class="ws-card">
+          <h2><i class="ti ti-repeat"></i> 3. Identity shift</h2>
+          <p class="muted" style="margin-top:6px;">Who must I become to complete this challenge?</p>
+          <label class="field-label" style="margin-top:10px;">Current identity</label>
+          <textarea placeholder="Who am I today?"></textarea>
+          <label class="field-label" style="margin-top:10px;">Future identity</label>
+          <textarea placeholder='"I am the type of person who..."'></textarea>
+        </div>
+
+        <div class="ws-card">
+          <h2><i class="ti ti-heart"></i> 4. Why this matters</h2>
+          <p class="muted" style="margin-top:6px;">This challenge aligns with:</p>
+          <div class="check-row">
+            <label><input type="checkbox"> Growth</label>
+            <label><input type="checkbox"> Courage</label>
+            <label><input type="checkbox"> Leadership</label>
+            <label><input type="checkbox"> Health</label>
+            <label><input type="checkbox"> Creativity</label>
+            <label><input type="checkbox"> Contribution</label>
+            <label><input type="checkbox"> Adventure</label>
+            <label><input type="checkbox"> Legacy</label>
+          </div>
+          <label class="field-label" style="margin-top:6px;">My deeper reason</label>
+          <textarea placeholder="Why does this matter beyond the achievement itself?"></textarea>
+        </div>
+
+        <div class="ws-card">
+          <h2><i class="ti ti-flag"></i> 5. Milestones</h2>
+          <p class="muted" style="margin-top:6px;margin-bottom:10px;">Break the year into checkpoints.</p>
+          <div class="milestone-row"><span>Quarter 1</span><input type="text" placeholder="What does done look like by Q1?"></div>
+          <div class="milestone-row"><span>Quarter 2</span><input type="text" placeholder="What does done look like by Q2?"></div>
+          <div class="milestone-row"><span>Quarter 3</span><input type="text" placeholder="What does done look like by Q3?"></div>
+          <div class="milestone-row"><span>Quarter 4</span><input type="text" placeholder="What does done look like by Q4?"></div>
+        </div>
+
+        <div class="ws-card">
+          <h2><i class="ti ti-mood-confuzed"></i> 6. Discomfort commitments</h2>
+          <p class="muted" style="margin-top:6px;">What uncomfortable actions must happen regularly?</p>
+          <div class="check-row" style="flex-direction:column; align-items:flex-start; gap:8px; margin-top:10px;">
+            <label><input type="checkbox"> Early mornings</label>
+            <label><input type="checkbox"> Public speaking</label>
+            <label><input type="checkbox"> Cold outreach</label>
+            <label><input type="checkbox"> Difficult conversations</label>
+            <label><input type="checkbox"> Physical training</label>
+            <label><input type="checkbox"> Deep work</label>
+            <label><input type="text" placeholder="Other..." style="border:none;border-bottom:0.5px solid #333;background:transparent;padding:2px 0;width:140px;"></label>
+          </div>
+        </div>
+
+        <div class="ws-card">
+          <h2><i class="ti ti-users"></i> 7. My support system</h2>
+          <label class="field-label" style="margin-top:6px;">Mentor(s)</label>
+          <input type="text" placeholder="Who can guide me through this?">
+          <label class="field-label" style="margin-top:10px;">Accountability partner</label>
+          <input type="text" placeholder="Who will check in on my progress?">
+          <label class="field-label" style="margin-top:10px;">Community</label>
+          <input type="text" placeholder="Which group or community supports this?">
+        </div>
+
+        <div class="ws-card">
+          <h2><i class="ti ti-gavel"></i> 8. Rules of the game</h2>
+          <label class="field-label" style="margin-top:6px;">What will I STOP doing?</label>
+          <textarea placeholder="List behaviors or habits to drop"></textarea>
+          <label class="field-label" style="margin-top:10px;">What will I START doing?</label>
+          <textarea placeholder="List behaviors or habits to build"></textarea>
+        </div>
+
+        <div class="ws-card ws-full">
+          <h2><i class="ti ti-alert-triangle"></i> 9. Failure reflection</h2>
+          <p class="muted" style="margin-top:6px;margin-bottom:8px;">If I fail, what will I still gain?</p>
+          <textarea placeholder="Even in failure, what's the upside?"></textarea>
+          <div class="ws-note">Because Misogi is not about achievement alone. It is about transformation.</div>
+        </div>
+
+        <div class="ws-card ws-full">
+          <h2><i class="ti ti-trophy"></i> 10. Year-end reflection</h2>
+          <p class="muted" style="margin-top:6px;margin-bottom:8px;">Complete this at the end of your challenge.</p>
+          <div class="yesno-row" style="margin-bottom:10px;">
+            <span style="color:#999;">Did I complete the Misogi?</span>
+            <label><input type="radio" name="completed"> Yes</label>
+            <label><input type="radio" name="completed"> No</label>
+          </div>
+          <label class="field-label">What surprised me most?</label>
+          <textarea placeholder=""></textarea>
+          <label class="field-label" style="margin-top:10px;">How did I change?</label>
+          <textarea placeholder=""></textarea>
+          <label class="field-label" style="margin-top:10px;">What did I learn about myself?</label>
+          <textarea placeholder=""></textarea>
+          <label class="field-label" style="margin-top:10px;">What is next year's Misogi?</label>
+          <textarea placeholder=""></textarea>
+        </div>
+      </div>
+
+      <div class="ws-footer">
+        <p style="font-size:13px;font-weight:500;letter-spacing:1px;">THE MISOGI MINDSET</p>
+        <p class="muted" style="margin-top:4px;">Discomfort today. Freedom tomorrow.</p>
+        <div class="ws-footer-tags">
+          <div><i class="ti ti-focus-2"></i>FOCUS<br>One challenge. Total clarity.</div>
+          <div><i class="ti ti-transform"></i>TRANSFORM<br>Become the person who gets it done.</div>
+          <div><i class="ti ti-bulb"></i>INSPIRE<br>Lead others through your example.</div>
+        </div>
+      </div>
+    </div>
+
       <div class="badge">MISOGI METHOD</div>
       <h1>Welcome back, Thanh</h1>
       <p class="muted" style="margin-bottom:20px;">Day 26 of your 365-day challenge</p>
@@ -211,7 +384,8 @@
     <!-- CREATE -->
     <div class="screen" id="screen-create">
       <h1>Create a challenge</h1>
-      <p class="muted" style="margin-bottom:20px;">Set up something tangible, physical, or skill-based — solo or open to others</p>
+      <p class="muted" style="margin-bottom:8px;">Set up something tangible, physical, or skill-based — solo or open to others</p>
+      <p class="muted" style="margin-bottom:20px;"><i class="ti ti-info-circle"></i> For your defining challenge, milestones, and reflection, fill out <strong>My Misogi</strong> first — this form is just the logistics.</p>
 
       <div class="form-grid">
         <div class="span-2">
@@ -330,6 +504,22 @@
     gridHtml += '</div></div>';
   }
   document.getElementById('calendar-grid').innerHTML = gridHtml;
+
+  // Build 1-10 scale dots for the worksheet
+  document.querySelectorAll('.scale-dots').forEach(container => {
+    for (let i = 1; i <= 10; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'scale-dot';
+      dot.dataset.value = i;
+      dot.addEventListener('click', () => {
+        container.querySelectorAll('.scale-dot').forEach((d, idx) => {
+          if (idx < i) d.classList.add('selected');
+          else d.classList.remove('selected');
+        });
+      });
+      container.appendChild(dot);
+    }
+  });
 </script>
 
 </body>
